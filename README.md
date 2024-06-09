@@ -1,8 +1,3 @@
-If the goal is to start with a blank database from scratch without using migrations, then you can skip the Flask-Migrate steps and directly create the database schema. Here’s how to update your README accordingly:
-
-### Updated README
-
-```markdown
 # Simple Robinhood Clone
 
 ## Brief Description
@@ -95,4 +90,3 @@ The frontend of this project is built with React and styled using Chakra UI. It 
 ## Conclusion
 
 This project is a simple example of how to build a full-stack application using Flask for the backend and React for the frontend. It integrates third-party APIs like OpenAI and yfinance to provide additional functionalities such as generating portfolio reviews and fetching real-time stock data.
-```
