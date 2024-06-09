@@ -105,7 +105,6 @@ def generate_portfolio_review(portfolio_data):
     load_dotenv()
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     openai.api_key = OPENAI_API_KEY   
-    #Could also OpenAI(api_key='your_api_key')
     
     
     # Generate completion based on aggregated portfolio review
