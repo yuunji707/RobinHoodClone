@@ -19,7 +19,7 @@ This is a simple Robinhood clone built with a full stack approach, featuring a F
 
    ```bash
    git clone git@github.com:yuunji707/SellScale_Project.git
-   cd Robinhood/backend
+   cd SellScale_Project/Robinhood/backend
    ```
 
 2. **Create a virtual environment and activate it:**
@@ -46,7 +46,7 @@ This is a simple Robinhood clone built with a full stack approach, featuring a F
 5. **Run the backend server:**
 
    ```bash
-   flask run
+   python3 app.py
    ```
 
 ### Frontend Setup
