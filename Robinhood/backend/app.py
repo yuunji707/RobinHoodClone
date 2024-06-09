@@ -65,7 +65,6 @@ def view_portfolio():
     return jsonify(portfolio_list)
 
 # OpenAI portion of backend
-client = OpenAI(api_key='')
 
 def generate_portfolio_review(portfolio_data):
     # Aggregate quantities for each stock ticker
