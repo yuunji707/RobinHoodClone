@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yfinance as yf
-import pandas as pd
-import json 
 from openai import OpenAI
 from models import db, Stock
 
@@ -40,16 +38,22 @@ def query_stock():
     except Exception as e:
         return jsonify({'error': f'Failed to fetch stock information: {str(e)}'}), 500
 
-
-
-
 @app.route('/buy', methods=['POST'])
 def buy_stock():
     data = request.get_json()
     ticker = data['ticker']
     quantity = data['quantity']
-    stock = Stock(ticker=ticker, quantity=quantity)
-    db.session.add(stock)
+
+    # Check if the stock already exists in the portfolio
+    stock = Stock.query.filter_by(ticker=ticker).first()
+    if stock:
+        # If stock exists, update the quantity
+        stock.quantity += quantity
+    else:
+        # If stock doesn't exist, create a new entry
+        stock = Stock(ticker=ticker, quantity=quantity)
+        db.session.add(stock)
+
     db.session.commit()
     return jsonify({'message': 'Stock purchased successfully'})
 
@@ -59,24 +63,33 @@ def view_portfolio():
     portfolio_list = [{'ticker': stock.ticker, 'quantity': stock.quantity} for stock in portfolio]
     return jsonify(portfolio_list)
 
-
-#OpenAI portion of backend
-
-client = OpenAI(api_key='sk-proj-srF8r174CIKhM75abws2T3BlbkFJGmuq55b3xhwFPZ6MtXZP')
+# OpenAI portion of backend
+client = OpenAI(api_key='')
 
 def generate_portfolio_review(portfolio_data):
-    prompt = "Please review this stock portfolio. The portfolio consists of the following stocks:\n" + "\n".join([f"{stock['ticker']}: {stock['quantity']}" for stock in portfolio_data])
+    # Aggregate quantities for each stock ticker
+    ticker_quantities = defaultdict(int)
+    for stock in portfolio_data:
+        ticker_quantities[stock['ticker']] += stock['quantity']
+    
+    # Create a formatted string with aggregated quantities
+    portfolio_review = "Please review this stock portfolio. The portfolio consists of the following stocks:\n"
+    for ticker, quantity in ticker_quantities.items():
+        portfolio_review += f"{ticker}: {quantity}\n"
+
+    # Generate completion based on aggregated portfolio review
     chat_completion = client.chat.completions.create(
         messages=[
             {
                 "role": "user",
-                "content": prompt,  # Use the portfolio data as the content
+                "content": portfolio_review,
             }
         ],
-        model="gpt-3.5-turbo"  # Use the desired model
-          # Specify JSON response format
+        model="gpt-3.5-turbo"
     )
-    message_content = chat_completion.choices[0].message.content # Extract content from the first choice
+
+    # Extract content from the first choice
+    message_content = chat_completion.choices[0].message.content
 
     return message_content
 
@@ -85,9 +98,6 @@ def get_portfolio_review():
     portfolio_data = request.json.get('portfolio_data')
     review = generate_portfolio_review(portfolio_data)
     return review
-
-
-
 
 if __name__ == '__main__':
     with app.app_context():
