@@ -62,7 +62,7 @@ def view_portfolio():
 
 #OpenAI portion of backend
 
-client = OpenAI(api_key='sk-proj-srF8r174CIKhM75abws2T3BlbkFJGmuq55b3xhwFPZ6MtXZP')
+client = OpenAI(api_key='API KEY')
 
 def generate_portfolio_review(portfolio_data):
     prompt = "Please review this stock portfolio. The portfolio consists of the following stocks:\n" + "\n".join([f"{stock['ticker']}: {stock['quantity']}" for stock in portfolio_data])
