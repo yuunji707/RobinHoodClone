@@ -1,3 +1,8 @@
+If the goal is to start with a blank database from scratch without using migrations, then you can skip the Flask-Migrate steps and directly create the database schema. Here’s how to update your README accordingly:
+
+### Updated README
+
+```markdown
 # Simple Robinhood Clone
 
 ## Brief Description
@@ -35,13 +40,13 @@ This is a simple Robinhood clone built with a full stack approach, featuring a F
    pip install -r requirements.txt
    ```
 
-4. **Set up the database:**
+4. **Set up the OpenAI API Key:**
 
-   ```bash
-   flask db init
-   flask db migrate
-   flask db upgrade
-   ```
+   - Create a `.env` file in the `backend` directory.
+   - Add your OpenAI API Key to the `.env` file:
+     ```env
+     OPENAI_API_KEY=your_openai_api_key
+     ```
 
 5. **Run the backend server:**
 
@@ -90,3 +95,4 @@ The frontend of this project is built with React and styled using Chakra UI. It 
 ## Conclusion
 
 This project is a simple example of how to build a full-stack application using Flask for the backend and React for the frontend. It integrates third-party APIs like OpenAI and yfinance to provide additional functionalities such as generating portfolio reviews and fetching real-time stock data.
+```
