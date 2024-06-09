@@ -44,32 +44,7 @@ export const viewPortfolio = async () => {
   }
 };
 
-// Function to display stock data
-function displayStockData(data: StockData): void {
-  const stockDataDiv = document.getElementById('stockData') as HTMLElement;
-  if (data.error) {
-    stockDataDiv.innerText = `Error: ${data.error}`;
-  } else {
-    stockDataDiv.innerHTML = `
-      <p>Logo URL: <img src="${data.logo_url}" alt="Logo" /></p>
-      <p>Pre-market Price: ${data.preMarketPrice !== null ? data.preMarketPrice : 'N/A'}</p>
-      <p>Regular Market Price: ${data.regularMarketPrice !== null ? data.regularMarketPrice : 'N/A'}</p>
-    `;
-  }
-}
-
-// Function to handle button click event
-async function getStockData(): Promise<void> {
-  const ticker = (document.getElementById('tickerInput') as HTMLInputElement).value;
-  try {
-    const data = await queryStock(ticker);
-    displayStockData(data);
-  } catch (error) {
-    console.error('Error fetching stock data:', error);
-    (document.getElementById('stockData') as HTMLElement).innerText = 'Error fetching stock data';
-  }
-}
-
+// Function to get portfolio review
 export const getPortfolioReview = async () => {
   try {
     const portfolioData = await viewPortfolio(); // Fetch portfolio data using viewPortfolio function
@@ -79,15 +54,4 @@ export const getPortfolioReview = async () => {
     console.error('Error getting portfolio review:', error);
     throw new Error('Error getting portfolio review');
   }
-}
-
-
-
-// Event listener for the button
-document.addEventListener('DOMContentLoaded', () => {
-  const button = document.querySelector('button') as HTMLButtonElement;
-  button.addEventListener('click', getStockData);
-});
-
-
-
+};
