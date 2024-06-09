@@ -70,6 +70,19 @@ async function getStockData(): Promise<void> {
   }
 }
 
+export const getPortfolioReview = async () => {
+  try {
+    const portfolioData = await viewPortfolio(); // Fetch portfolio data using viewPortfolio function
+    const response = await api.post('/portfolio/review', { portfolio_data: portfolioData });
+    return response.data;
+  } catch (error) {
+    console.error('Error getting portfolio review:', error);
+    throw new Error('Error getting portfolio review');
+  }
+}
+
+
+
 // Event listener for the button
 document.addEventListener('DOMContentLoaded', () => {
   const button = document.querySelector('button') as HTMLButtonElement;
