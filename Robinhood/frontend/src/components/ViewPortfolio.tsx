@@ -1,34 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { viewPortfolio } from '../api';
-
-interface Stock {
-  ticker: string;
-  quantity: number;
-}
+import React, { useEffect } from 'react';
+import { usePortfolio } from '../context/PortfolioContext';
 
 const ViewPortfolio: React.FC = () => {
-  const [portfolio, setPortfolio] = useState<Stock[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const { portfolio, fetchPortfolio } = usePortfolio();
 
   useEffect(() => {
-    const fetchPortfolio = async () => {
-      try {
-        const response = await viewPortfolio();
-        setPortfolio(response);
-      } catch (error) {
-        console.error('Error fetching portfolio:', error);
-        setError('Error fetching portfolio');
-      }
-    };
-
     fetchPortfolio();
   }, []);
 
   return (
     <div>
       <h1>Portfolio</h1>
-      {error ? (
-        <p>{error}</p>
+      {portfolio.length === 0 ? (
+        <p>No stocks in portfolio</p>
       ) : (
         <ul>
           {portfolio.map((stock, index) => (

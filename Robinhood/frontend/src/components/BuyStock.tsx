@@ -1,34 +1,36 @@
 import React, { useState } from 'react';
-import { buyStock } from '../api';
-import { TextField, Button, Typography, Container } from '@mui/material';
+import { usePortfolio } from '../context/PortfolioContext';
 
 const BuyStock: React.FC = () => {
+  const { buyStockAndUpdatePortfolio } = usePortfolio();
   const [ticker, setTicker] = useState('');
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState<number>(0);
 
-  const handleBuy = async () => {
-    await buyStock(ticker, quantity);
-    alert('Stock purchased successfully');
+  const handleBuyStock = async () => {
+    if (ticker && quantity > 0) {
+      await buyStockAndUpdatePortfolio(ticker, quantity);
+      setTicker('');
+      setQuantity(0);
+    }
   };
 
   return (
-    <Container>
-      <Typography variant="h4">Buy Stock</Typography>
-      <TextField
-        label="Stock Ticker"
-        variant="outlined"
+    <div>
+      <h1>Buy Stock</h1>
+      <input
+        type="text"
         value={ticker}
         onChange={(e) => setTicker(e.target.value)}
+        placeholder="Ticker"
       />
-      <TextField
-        label="Quantity"
+      <input
         type="number"
-        variant="outlined"
         value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
+        onChange={(e) => setQuantity(parseInt(e.target.value))}
+        placeholder="Quantity"
       />
-      <Button variant="contained" color="primary" onClick={handleBuy}>Buy</Button>
-    </Container>
+      <button onClick={handleBuyStock}>Buy</button>
+    </div>
   );
 };
 

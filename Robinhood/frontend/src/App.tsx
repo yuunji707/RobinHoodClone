@@ -3,11 +3,13 @@ import QueryStock from './components/QueryStock';
 import BuyStock from './components/BuyStock';
 import ViewPortfolio from './components/ViewPortfolio';
 import PortfolioReview from './components/PortfolioReview';
+import { PortfolioProvider } from './context/PortfolioContext';
 
 import { Container, AppBar, Toolbar, Typography } from '@mui/material';
 
 const App: React.FC = () => {
   return (
+    <PortfolioProvider>
     <Container>
       <AppBar position="static">
         <Toolbar>
@@ -19,6 +21,7 @@ const App: React.FC = () => {
       <ViewPortfolio />
       <PortfolioReview />
     </Container>
+    </PortfolioProvider>
   );
 };
 

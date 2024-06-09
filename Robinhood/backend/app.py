@@ -1,3 +1,4 @@
+from collections import defaultdict
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yfinance as yf
@@ -64,7 +65,7 @@ def view_portfolio():
     return jsonify(portfolio_list)
 
 # OpenAI portion of backend
-client = OpenAI(api_key='')
+client = OpenAI(api_key='sk-proj-XqLuVKZ66zLRXBZXlvPmT3BlbkFJIfHw6c9UnFDPT1wYVkYO')
 
 def generate_portfolio_review(portfolio_data):
     # Aggregate quantities for each stock ticker
