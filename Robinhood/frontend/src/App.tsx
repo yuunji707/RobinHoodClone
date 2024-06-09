@@ -1,9 +1,6 @@
 import React from 'react';
 import { ChakraProvider, extendTheme, Box, Text, Container } from '@chakra-ui/react';
-import QueryStock from './components/QueryStock';
-import BuyStock from './components/BuyStock';
-import ViewPortfolio from './components/ViewPortfolio';
-import PortfolioReview from './components/PortfolioReview';
+import { QueryStock, BuyStock, ViewPortfolio, PortfolioReview } from './components';
 import { PortfolioProvider } from './context/PortfolioContext';
 
 const theme = extendTheme({

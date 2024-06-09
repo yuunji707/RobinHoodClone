@@ -6,21 +6,28 @@ import {
   Button,
   VStack,
   Heading,
-  Image,
   Text,
   useToast
 } from '@chakra-ui/react';
 
 const QueryStock: React.FC = () => {
+  // State to store the stock ticker input
   const [ticker, setTicker] = useState<string>('');
+  // State to store the fetched stock information
   const [stockInfo, setStockInfo] = useState<StockData | null>(null);
+  // Hook to display toast notifications
   const toast = useToast();
 
+  // Function to handle querying the stock information
   const handleQuery = async () => {
     try {
+      // Fetch the stock information from the backend
       const response = await queryStock(ticker);
+      // Set the stock information state with the fetched data
       setStockInfo(response);
     } catch (error) {
+      console.error('Error querying stock data:', error);
+      // Display an error toast notification
       toast({
         title: "Error",
         description: "Error fetching stock data.",
@@ -28,6 +35,7 @@ const QueryStock: React.FC = () => {
         duration: 5000,
         isClosable: true,
       });
+      // Set the stock information state with an error message
       setStockInfo({
         symbol: '',
         currentPrice: null,
@@ -53,7 +61,6 @@ const QueryStock: React.FC = () => {
             <Text color="red.500">{stockInfo.error}</Text>
           ) : (
             <>
-              <Image src={stockInfo.symbol} alt={`${ticker} logo`} boxSize="50px" />
               <Text>Cost per Share: {stockInfo.currentPrice ?? 'N/A'}</Text>
               <Text>Market Cap: {stockInfo.marketCap ?? 'N/A'}</Text>
             </>
