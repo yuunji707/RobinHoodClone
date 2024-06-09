@@ -3,7 +3,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yfinance as yf
-from openai import OpenAI
+import openai
 from models import db, Stock
 from dotenv import load_dotenv
 from flask_socketio import SocketIO, emit
@@ -104,12 +104,12 @@ def generate_portfolio_review(portfolio_data):
     # Initialize OpenAI client with API key
     load_dotenv()
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    client = OpenAI(OPENAI_API_KEY)
+    openai.api_key = OPENAI_API_KEY   
     #Could also OpenAI(api_key='your_api_key')
     
     
     # Generate completion based on aggregated portfolio review
-    chat_completion = client.chat.completions.create(
+    chat_completion = openai.chat.completions.create(
         messages=[
             {
                 "role": "user",
