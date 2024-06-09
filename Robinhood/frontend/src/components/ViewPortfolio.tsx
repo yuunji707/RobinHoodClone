@@ -4,14 +4,15 @@ import { Box, Heading, List, ListItem, Text, useColorModeValue } from '@chakra-u
 
 const ViewPortfolio: React.FC = () => {
   const { portfolio, fetchPortfolio } = usePortfolio();
-  const bg = useColorModeValue('gray.100', 'gray.700');
+  const bg = useColorModeValue('gray.700', 'gray.100'); // Background color for light and dark modes
+  const color = useColorModeValue('white', 'black'); // Text color for light and dark modes
 
   useEffect(() => {
     fetchPortfolio();
   }, []);
 
   return (
-    <Box bg={bg} p={4} borderRadius="md">
+    <Box bg={bg} p={4} borderRadius="md" color={color}>
       <Heading as="h2" size="lg" mb={4}>Portfolio</Heading>
       {portfolio.length === 0 ? (
         <Text>No stocks in portfolio</Text>

@@ -29,9 +29,9 @@ const QueryStock: React.FC = () => {
         isClosable: true,
       });
       setStockInfo({
-        logo_url: '',
-        preMarketPrice: null,
-        regularMarketPrice: null,
+        symbol: '',
+        currentPrice: null,
+        marketCap: null,
         error: 'Error fetching stock data',
       });
     }
@@ -53,9 +53,9 @@ const QueryStock: React.FC = () => {
             <Text color="red.500">{stockInfo.error}</Text>
           ) : (
             <>
-              <Image src={stockInfo.logo_url} alt={`${ticker} logo`} boxSize="50px" />
-              <Text>Cost per Share: {stockInfo.preMarketPrice ?? 'N/A'}</Text>
-              <Text>Market Cap: {stockInfo.regularMarketPrice ?? 'N/A'}</Text>
+              <Image src={stockInfo.symbol} alt={`${ticker} logo`} boxSize="50px" />
+              <Text>Cost per Share: {stockInfo.currentPrice ?? 'N/A'}</Text>
+              <Text>Market Cap: {stockInfo.marketCap ?? 'N/A'}</Text>
             </>
           )}
         </Box>

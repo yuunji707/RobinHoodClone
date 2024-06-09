@@ -21,15 +21,17 @@ def query_stock():
     try:
         stock = yf.Ticker(ticker)
         info = stock.info
+        print(info.get('currentPrice', None))
         if info:
-            logo_url = info.get('logo_url', '')
-            preMarketPrice = info.get('preMarketPrice', None)
-            regularMarketPrice = info.get('regularMarketPrice', None)
+            symbol = info.get('symbol', '')
+            currentPrice = info.get('currentPrice', None)
+            marketCap = info.get('marketCap', None)
             stock_info = {
-                'logo_url': logo_url,
-                'preMarketPrice': preMarketPrice,
-                'regularMarketPrice': regularMarketPrice
+                'symbol': symbol,
+                'currentPrice': currentPrice,
+                'marketCap': marketCap
             }
+            
             return jsonify(stock_info), 200
         else:
             return jsonify({'error': 'No information available for the provided ticker'}), 404
@@ -74,6 +76,7 @@ def generate_portfolio_review(portfolio_data):
     portfolio_review = "Please review this stock portfolio. The portfolio consists of the following stocks:\n"
     for ticker, quantity in ticker_quantities.items():
         portfolio_review += f"{ticker}: {quantity}\n"
+        
 
     chat_completion = client.chat.completions.create(
         messages=[
@@ -98,4 +101,5 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     socketio.run(app, debug=True)
+
 

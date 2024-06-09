@@ -5,9 +5,9 @@ const api = axios.create({
 });
 
 export interface StockData {
-  logo_url: string;
-  preMarketPrice: number | null;
-  regularMarketPrice: number | null;
+  symbol: string;
+  currentPrice: number | null;
+  marketCap: number | null;
   error?: string;
 }
 
@@ -15,12 +15,20 @@ export interface StockData {
 export const queryStock = async (ticker: string): Promise<StockData> => {
   try {
     const response = await api.get(`/query?ticker=${ticker}`);
-    return response.data;
+    console.log('API Response:', response.data); // Add this line to check response structure
+    // Ensure response structure matches StockData interface
+    return {
+      symbol: response.data.symbol,
+      currentPrice: response.data.currentPrice,
+      marketCap: response.data.marketCap,
+      error: response.data.error,
+    };
   } catch (error) {
     console.error('Error querying stock data:', error);
     throw new Error('Error querying stock data');
   }
 };
+
 
 // Function to buy stock
 export const buyStock = async (ticker: string, quantity: number) => {
