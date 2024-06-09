@@ -1,9 +1,11 @@
 from collections import defaultdict
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yfinance as yf
 from openai import OpenAI
 from models import db, Stock
+from dotenv import load_dotenv
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -27,7 +29,6 @@ def query_stock():
     try:
         stock = yf.Ticker(ticker)
         info = stock.info
-        print(info.get('currentPrice', None))
         if info:
             symbol = info.get('symbol', '')
             currentPrice = info.get('currentPrice', None)
@@ -101,8 +102,12 @@ def generate_portfolio_review(portfolio_data):
         portfolio_review += f"{ticker}: {quantity}\n"
         
     # Initialize OpenAI client with API key
-    client = OpenAI(api_key='')
-
+    load_dotenv()
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    client = OpenAI(OPENAI_API_KEY)
+    #Could also OpenAI(api_key='your_api_key')
+    
+    
     # Generate completion based on aggregated portfolio review
     chat_completion = client.chat.completions.create(
         messages=[
