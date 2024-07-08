@@ -42,16 +42,29 @@ export const buyStock = async (ticker: string, quantity: number) => {
   }
 };
 
+// Function to sell stock and update the backend
+export const sellStock = async (ticker: string, quantity: number) => {
+  try {
+    const response = await api.post('/sell', { ticker, quantity });
+    return response.data;
+  } catch (error) {
+    console.error('Error selling stock:', error);
+    throw new Error('Error selling stock');
+  }
+};
+
+
 // Function to view the portfolio from the backend
 export const viewPortfolio = async () => {
   try {
     const response = await api.get('/portfolio');
-    return response.data; // Assuming the response contains the portfolio data
+    return response.data; // The response now contains both bought_stocks and sold_stocks
   } catch (error) {
     console.error('Error fetching portfolio:', error);
     throw error;
   }
 };
+
 
 // Function to get a review of the portfolio from the backend
 export const getPortfolioReview = async () => {

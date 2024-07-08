@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChakraProvider, extendTheme, Box, Text, Container } from '@chakra-ui/react';
-import { QueryStock, BuyStock, ViewPortfolio, PortfolioReview } from './components';
+import { QueryStock, BuyStock, SellStock, ViewPortfolio, PortfolioReview } from './components';
 import { PortfolioProvider } from './context/PortfolioContext';
 
 const theme = extendTheme({
@@ -35,6 +35,7 @@ const App: React.FC = () => {
           <AppBar />
           <QueryStock />
           <BuyStock />
+          <SellStock/>
           <ViewPortfolio />
           <PortfolioReview />
         </Container>

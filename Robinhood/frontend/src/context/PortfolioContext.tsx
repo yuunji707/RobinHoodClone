@@ -1,29 +1,43 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { viewPortfolio, buyStock } from '../api';
+import { viewPortfolio, buyStock, sellStock } from '../api';
 import { useToast } from '@chakra-ui/react';
 
-// Interface for a stock object
-interface Stock {
+// Interfaces to define the structure of bought and sold stocks
+interface BoughtStock {
   ticker: string;
   quantity: number;
+  date_bought: string;
 }
 
-// Interface for the Portfolio context properties
+interface SoldStock {
+  ticker: string;
+  quantity: number;
+  date_sold: string;
+}
+
+// Interface to define the structure of the portfolio
+interface Portfolio {
+  bought_stocks: BoughtStock[];
+  sold_stocks: SoldStock[];
+}
+
+// Interface for the context properties
 interface PortfolioContextProps {
-  portfolio: Stock[];
+  portfolio: Portfolio;
   fetchPortfolio: () => Promise<void>;
   buyStockAndUpdatePortfolio: (ticker: string, quantity: number) => Promise<void>;
+  sellStockAndUpdatePortfolio: (ticker: string, quantity: number) => Promise<void>;
 }
 
-// Create a context for the Portfolio
+// Create a context for the portfolio with an undefined initial value
 const PortfolioContext = createContext<PortfolioContextProps | undefined>(undefined);
 
+// Provider component to manage the portfolio state and actions
 export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // State to hold the portfolio data
-  const [portfolio, setPortfolio] = useState<Stock[]>([]);
+  const [portfolio, setPortfolio] = useState<Portfolio>({ bought_stocks: [], sold_stocks: [] });
   const toast = useToast();
 
-  // Function to fetch the portfolio data from the server
+  // Function to fetch the portfolio from the API
   const fetchPortfolio = async () => {
     try {
       const response = await viewPortfolio();
@@ -37,7 +51,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   const buyStockAndUpdatePortfolio = async (ticker: string, quantity: number) => {
     try {
       await buyStock(ticker, quantity);
-      await fetchPortfolio(); // Fetch the updated portfolio
+      await fetchPortfolio();
       toast({
         title: 'Portfolio updated',
         status: 'success',
@@ -49,15 +63,30 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   };
 
-  // useEffect to set up WebSocket connection and fetch initial portfolio data
+  // Function to sell stock and update the portfolio
+  const sellStockAndUpdatePortfolio = async (ticker: string, quantity: number) => {
+    try {
+      await sellStock(ticker, quantity);
+      await fetchPortfolio();
+      toast({
+        title: 'Portfolio updated',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error selling stock:', error);
+    }
+  };
+
+  // useEffect hook to fetch the portfolio and set up WebSocket connection on component mount
   useEffect(() => {
     fetchPortfolio();
 
-    // Create a WebSocket connection
     const socket = new WebSocket('ws://localhost:5000');
     socket.onopen = () => console.log('WebSocket connection established');
     
-    // Handle incoming WebSocket messages
+    // Handle incoming messages from WebSocket
     socket.onmessage = (event) => {
       const updatedPortfolio = JSON.parse(event.data);
       setPortfolio(updatedPortfolio);
@@ -70,23 +99,22 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
     };
 
     socket.onerror = (error) => console.error('WebSocket error:', error);
-    
     socket.onclose = () => console.log('WebSocket connection closed');
 
-    // Clean up WebSocket connection on component unmount
+    // Cleanup function to close the WebSocket connection
     return () => {
       socket.close();
     };
   }, []);
 
   return (
-    <PortfolioContext.Provider value={{ portfolio, fetchPortfolio, buyStockAndUpdatePortfolio }}>
+    <PortfolioContext.Provider value={{ portfolio, fetchPortfolio, buyStockAndUpdatePortfolio, sellStockAndUpdatePortfolio }}>
       {children}
     </PortfolioContext.Provider>
   );
 };
 
-// Custom hook to use the Portfolio context
+// Custom hook to use the PortfolioContext
 export const usePortfolio = () => {
   const context = useContext(PortfolioContext);
   if (!context) {
