@@ -1,4 +1,5 @@
 # Simple Robinhood Clone
+ [Link to 30 second Demo](https://www.loom.com/share/447efdcdb04e4320bdd0bffd662abe65?sid=fd660284-bf4c-411)
 
 ## Brief Description
 
